@@ -158,7 +158,7 @@ MarkerClusterer.prototype.extend = function(obj1, obj2) {
 
 
 /**
- * Implementaion of the interface method.
+ * Implementation of the interface method.
  * @ignore
  */
 MarkerClusterer.prototype.onAdd = function() {
@@ -166,7 +166,7 @@ MarkerClusterer.prototype.onAdd = function() {
 };
 
 /**
- * Implementaion of the interface method.
+ * Implementation of the interface method.
  * @ignore
  */
 MarkerClusterer.prototype.draw = function() {};
@@ -728,6 +728,12 @@ MarkerClusterer.prototype.createClusters_ = function() {
     }
 };
 
+/*************added************/
+MarkerClusterer.prototype.getClusters = function() {
+    return this.clusters_;
+};
+/*************added end************/
+
 
 /**
  * A cluster that contains markers.
@@ -918,8 +924,9 @@ Cluster.prototype.getMap = function() {
 
 /**
  * Updates the cluster icon
+ * if newStyles provided, apply them. Otherwise use default styles
  */
-Cluster.prototype.updateIcon = function() {
+Cluster.prototype.updateIcon = function(newStyles) {
     var zoom = this.map_.getZoom();
     var mz = this.markerClusterer_.getMaxZoom();
 
@@ -940,7 +947,7 @@ Cluster.prototype.updateIcon = function() {
     var numStyles = this.markerClusterer_.getStyles().length;
     var sums = this.markerClusterer_.getCalculator()(this.markers_, numStyles);
     this.clusterIcon_.setCenter(this.center_);
-    this.clusterIcon_.setSums(sums);
+    this.clusterIcon_.setSums(sums, newStyles);
     this.clusterIcon_.show();
 };
 
@@ -1092,11 +1099,12 @@ ClusterIcon.prototype.onRemove = function() {
 /**
  * Set the sums of the icon.
  *
+ * @param {Array} newStyles new styles array (option)
  * @param {Object} sums The sums containing:
  *   'text': (string) The text to display in the icon.
  *   'index': (number) The style index of the icon.
  */
-ClusterIcon.prototype.setSums = function(sums) {
+ClusterIcon.prototype.setSums = function(sums, newStyles) {
     this.sums_ = sums;
     this.text_ = sums.text;
     this.index_ = sums.index;
@@ -1104,17 +1112,18 @@ ClusterIcon.prototype.setSums = function(sums) {
         this.div_.innerHTML = sums.text;
     }
 
-    this.useStyle();
+    this.useStyle(newStyles);
 };
 
 
 /**
  * Sets the icon to the the styles.
+ * if styles provided, apply them.
  */
-ClusterIcon.prototype.useStyle = function() {
+ClusterIcon.prototype.useStyle = function(styles) {
     var index = Math.max(0, this.sums_.index - 1);
     index = Math.min(this.styles_.length - 1, index);
-    var style = this.styles_[index];
+    var style = styles ? styles[index] : this.styles_[index];
     this.url_ = style['url'];
     this.height_ = style['height'];
     this.width_ = style['width'];
@@ -1122,6 +1131,7 @@ ClusterIcon.prototype.useStyle = function() {
     this.anchor_ = style['anchor'];
     this.textSize_ = style['textSize'];
     this.backgroundPosition_ = style['backgroundPosition'];
+    this.backgroundSize_ = style['backgroundSize'];
 };
 
 
@@ -1146,6 +1156,10 @@ ClusterIcon.prototype.createCss = function(pos) {
     style.push('background-image:url(' + this.url_ + ');');
     var backgroundPosition = this.backgroundPosition_ ? this.backgroundPosition_ : '0 0';
     style.push('background-position:' + backgroundPosition + ';');
+
+    if (this.backgroundSize_) {
+        style.push('background-size:' + this.backgroundSize_ + ';');
+    }
 
     if (typeof this.anchor_ === 'object') {
         if (typeof this.anchor_[0] === 'number' && this.anchor_[0] > 0 &&
@@ -1219,6 +1233,10 @@ MarkerClusterer.prototype['setMaxZoom'] =
     MarkerClusterer.prototype.setMaxZoom;
 MarkerClusterer.prototype['onAdd'] = MarkerClusterer.prototype.onAdd;
 MarkerClusterer.prototype['draw'] = MarkerClusterer.prototype.draw;
+
+/*************added************/
+MarkerClusterer.prototype['getClusters'] = MarkerClusterer.prototype.getClusters;
+/*************added end************/
 
 Cluster.prototype['getCenter'] = Cluster.prototype.getCenter;
 Cluster.prototype['getSize'] = Cluster.prototype.getSize;
