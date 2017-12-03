@@ -1,30 +1,16 @@
 {
-  "name": "js-marker-clusterer",
-  "version": "1.0.0",
-  "description": "The library creates and manages per-zoom-level clusters for large amounts of markers. Google API v3.",
-  "main": "src/markerclusterer.js",
-  "directories": {
-    "doc": "docs",
-    "example": "examples"
-  },
+  "name": "inner-clusterer",
+  "version": "0.0.1",
+  "description": "Google's marker clusterer with few changes",
+  "main": "src/clusterer.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/googlemaps/js-marker-clusterer.git"
+    "url": "git+https://github.com/inner-proger/inner-clusterer.git"
   },
-  "keywords": [
-    "google",
-    "marker",
-    "cluster",
-    "clusterer",
-    "javascript",
-    "js",
-    "api",
-    "v3"
-  ],
-  "author": "Luke Mahe",
+  "author": "Inner",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/googlemaps/js-marker-clusterer/issues"
+    "url": "https://github.com/inner-proger/inner-clusterer/issues"
   },
-  "homepage": "https://github.com/googlemaps/js-marker-clusterer#readme"
+  "homepage": "https://github.com/inner-proger/inner-clusterer#readme"
 }
